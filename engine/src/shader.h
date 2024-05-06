@@ -11,8 +11,6 @@
 namespace lowpoly
 {
 
-
-
 class shader
 {
 public:

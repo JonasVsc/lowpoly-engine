@@ -1,12 +1,44 @@
 #include"shader.h"
 
 
+const char* vertexShaderSource = "#version 330 core\n"
+"layout (location = 0) in vec3 aPos;\n"
+"void main()\n"
+"{\n"
+"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"}\0";
 
-lowpoly::shader::shader(const char* vertex_path, const char* fragment_path)
+const char* fragmentShaderSource = "#version 330 core\n"
+"out vec4 FragColor;\n"
+"void main()\n"
+"{\n"
+"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"}\n\0";
+
+lowpoly::shader::shader(const char* p_vertex_file_path, const char* p_fragment_file_path)
 	: program{ glCreateProgram() }
 	, vertex_shader{ glCreateShader(GL_VERTEX_SHADER) }
 	, fragment_shader{ glCreateShader(GL_FRAGMENT_SHADER) }
 {
+	const char* p_vertex_shader_source = read_file(p_vertex_file_path);
+	const char* p_fragment_shader_source = read_file(p_fragment_file_path);
+
+	
+
+	// compile shaders
+	glShaderSource(vertex_shader, 1, &vertexShaderSource, NULL);
+	glShaderSource(fragment_shader, 1, &fragmentShaderSource, NULL);
+
+	glCompileShader(vertex_shader);
+	catch_shader_compile_errors(vertex_shader);
+
+	glCompileShader(fragment_shader);
+	catch_shader_compile_errors(fragment_shader);
+
+	glAttachShader(program, vertex_shader);
+	glAttachShader(program, fragment_shader);
+	glLinkProgram(program);
+	catch_program_compile_errors(program);
 }
 
 const char* lowpoly::shader::read_file(const char* p_shader_file_path)
@@ -65,3 +97,5 @@ void lowpoly::shader::catch_program_compile_errors(GLuint program)
 		std::cerr << message << '\n';
 	}
 }
+
+

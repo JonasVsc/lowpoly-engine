@@ -2,6 +2,8 @@
 
 void processInput(GLFWwindow* window);
 
+
+
 int main()
 {
 	lowpoly_engine application;
@@ -9,21 +11,29 @@ int main()
 	// settings
 	application.setGUI(false);
 
+	//shader
+	lowpoly::shader my_shader("shaders/vertexShader.glsl", "shaders/fragmentShader.glsl");
 
-	// shaders
-	lowpoly::shader my_shader("shaders/vertexShader.vs", "shaders/fragmentShader.fs");
+	// objects
+	lowpoly::triangle t;
+	
+	glClearColor(0.0f, 0.0f, 0.5f, 1.0f);
+
+
 
 	while (!glfwWindowShouldClose(application.getWindow()))
 	{
-		application.clear();
-
 		// input
 		processInput(application.getWindow());
 
-		// Draw
+		application.clear();
 
-		
+		// Shader
 		glUseProgram(my_shader.program);
+		t.draw();
+		
+
+		// Render
 		application.render();
 	}
 	

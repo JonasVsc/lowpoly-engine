@@ -14,6 +14,7 @@
 #include <cstdio>
 
 #include"shader.h"
+#include"triangle.h"
 
 
 class lowpoly_engine

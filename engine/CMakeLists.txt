@@ -16,7 +16,11 @@ find_package(imgui CONFIG REQUIRED)
 add_library(lowpoly-engine STATIC 
 	"src/lowpoly-engine.cpp" 
 	"src/lowpoly-engine.h"
- "src/shader.h" "src/shader.cpp")
+	"src/triangle.cpp"
+	"src/triangle.h" 
+	"src/shader.cpp"
+	"src/shader.h"
+)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET lowpoly-engine PROPERTY CXX_STANDARD 20)
@@ -28,3 +32,4 @@ target_link_libraries(lowpoly-engine PRIVATE glfw)
 target_link_libraries(lowpoly-engine PRIVATE GLEW::glew)
 target_link_libraries(lowpoly-engine PRIVATE glm::glm)
 target_link_libraries(lowpoly-engine PRIVATE imgui::imgui)
+
