@@ -2,13 +2,22 @@
 //
 #include "lowpoly-engine.h"
 
+// settings
+uint32_t SCREEN_WIDTH{ 1024 };
+uint32_t SCREEN_HEIGHT{ 768 };
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
 int main()
 {
 	if (!glfwInit())
 		std::cerr << "Error::glfw" << std::endl;
 
-	GLFWwindow* window = glfwCreateWindow(1024, 768, "OpenGL Application", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL Application", NULL, NULL);
 	glfwMakeContextCurrent(window);
+
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
 	glewInit();
 
 	IMGUI_CHECKVERSION();
@@ -36,7 +45,6 @@ int main()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		ImGui::SetNextWindowPos(ImVec2(500, 500));
 		ImGui::Text("Here you are, the unawared one");
 		glfwSetWindowShouldClose(window, ImGui::Button("Exit", ImVec2(100, 20)));
 
@@ -47,4 +55,12 @@ int main()
 
 	}
 	return 0;
+}
+
+
+
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
 }
