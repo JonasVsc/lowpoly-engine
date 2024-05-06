@@ -23,7 +23,7 @@ SOFTWARE.
 
 This software includes the use of the following libraries, each with its own license:
 
-- GLFW (The OpenGL FrameWork) - Licença zlib/libpng
-- GLEW (The OpenGL Extension Wrangler Library) - Licença Mesa 3-D
-- GLM (OpenGL Mathematics) - Licença MIT
-- Dear ImGui (Immediate Mode Graphical User Interface) - Licença MIT
+- GLFW (The OpenGL FrameWork) - License zlib/libpng
+- GLEW (The OpenGL Extension Wrangler Library) - License Mesa 3-D
+- GLM (OpenGL Mathematics) - License MIT
+- Dear ImGui (Immediate Mode Graphical User Interface) - License MIT
