@@ -1,3 +1,9 @@
+# Project
+out
+.vs
+CMakeUserPresets.json
+
+
 # Prerequisites
 *.d
 
