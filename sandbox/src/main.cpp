@@ -2,8 +2,19 @@
 
 int main()
 {
-	lowpoly_engine teste;
+	lowpoly_engine application;
+
+	application.setGUI(false);
+
+	while (true)
+	{
+		application.clear();
+		application.processInput();
+
+		// Draw
+
+		application.render();
+	}
 	
-	teste.start();
 	return 0;
 }

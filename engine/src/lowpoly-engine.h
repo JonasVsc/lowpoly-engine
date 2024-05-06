@@ -18,23 +18,29 @@ class lowpoly_engine
 public:
 	lowpoly_engine();
 
+	void clear();
+	void draw();
+	void render();
+	void processInput();
+
 
 public:
-	void start();
-
-
+	
+	void setGUI(bool v);
 
 private:
 
 
 private:
 	GLFWwindow* lowpoly_window;
+	bool m_GUI;
 
 
 
 
 };
 
+// Utilities
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 

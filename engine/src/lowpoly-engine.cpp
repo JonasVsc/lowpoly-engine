@@ -35,28 +35,43 @@ lowpoly_engine::lowpoly_engine()
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-void lowpoly_engine::start()
+void lowpoly_engine::processInput()
 {
-	while (!glfwWindowShouldClose(lowpoly_window))
-	{
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-		float windowHeight = 200.0f; // Altura desejada da janela
-
-		ImGui::SetNextWindowPos(ImVec2(0, ImGui::GetIO().DisplaySize.y - windowHeight), ImGuiCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x, windowHeight));
-		ImGui::Begin("Minha Janela ImGui", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
-		ImGui::Text("Example");
-		ImGui::End();
-		glfwPollEvents();
-
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		glfwSwapBuffers(lowpoly_window);
-	}
+	glfwPollEvents();
 }
 
 
+void lowpoly_engine::clear()
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void lowpoly_engine::draw()
+{
+}
+
+
+void lowpoly_engine::render()
+{
+
+		
+
+		
+
+		
+
+
+	// enable GUI render
+	if (m_GUI)
+	{
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	}
+	glfwSwapBuffers(lowpoly_window);
+}
+
+
+void lowpoly_engine::setGUI(bool v)
+{
+	m_GUI = v;
+}
