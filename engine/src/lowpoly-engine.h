@@ -13,4 +13,28 @@
 #include <iostream>
 #include <cstdio>
 
+class lowpoly_engine
+{
+public:
+	lowpoly_engine();
+
+
+public:
+
+
+
+
+
+
+
+private:
+	GLFWwindow* lowpoly_window;
+
+
+
+
+};
+
+
+
 // TODO: Reference additional headers your program requires here.
