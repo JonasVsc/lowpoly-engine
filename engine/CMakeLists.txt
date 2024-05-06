@@ -16,7 +16,7 @@ find_package(imgui CONFIG REQUIRED)
 add_library(lowpoly-engine STATIC 
 	"src/lowpoly-engine.cpp" 
 	"src/lowpoly-engine.h"
-)
+ "src/shader.h" "src/shader.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET lowpoly-engine PROPERTY CXX_STANDARD 20)

@@ -6,7 +6,12 @@ int main()
 {
 	lowpoly_engine application;
 
+	// settings
 	application.setGUI(false);
+
+
+	// shaders
+	lowpoly::shader my_shader("shaders/vertexShader.vs", "shaders/fragmentShader.fs");
 
 	while (!glfwWindowShouldClose(application.getWindow()))
 	{
@@ -16,8 +21,9 @@ int main()
 		processInput(application.getWindow());
 
 		// Draw
-		
 
+		
+		glUseProgram(my_shader.program);
 		application.render();
 	}
 	

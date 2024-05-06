@@ -1,13 +1,12 @@
 ﻿#include"lowpoly-engine.h"
 
 
-
 lowpoly_engine::lowpoly_engine()
 	: m_GUI{ false }
 {
 	glfwInit();
 
-    // Hints
+    // Window Hints
 	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
 	

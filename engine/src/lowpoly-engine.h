@@ -13,6 +13,9 @@
 #include <iostream>
 #include <cstdio>
 
+#include"shader.h"
+
+
 class lowpoly_engine
 {
 public:
