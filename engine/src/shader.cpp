@@ -1,100 +1,89 @@
 #include"shader.h"
 
 
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"}\n\0";
-
-lowpoly::shader::shader(const char* p_vertex_file_path, const char* p_fragment_file_path)
-	: program{ glCreateProgram() }
-	, vertex_shader{ glCreateShader(GL_VERTEX_SHADER) }
-	, fragment_shader{ glCreateShader(GL_FRAGMENT_SHADER) }
+shader::shader(const char* p_vertex_file_path, const char* p_fragment_file_path)
 {
-	const char* p_vertex_shader_source = read_file(p_vertex_file_path);
-	const char* p_fragment_shader_source = read_file(p_fragment_file_path);
+	std::string vertex_code;
+	std::string fragment_code;
+	std::ifstream vs_shader_file;
+	std::ifstream fs_shader_file;
 
-	
+	vs_shader_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	fs_shader_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
+	try
+	{
+		vs_shader_file.open(p_vertex_file_path);
+		fs_shader_file.open(p_fragment_file_path);
+		std::stringstream vs_shader_stream, fs_shader_stream;
+		vs_shader_stream << vs_shader_file.rdbuf();
+		fs_shader_stream << fs_shader_file.rdbuf();
+
+		vs_shader_file.close();
+		fs_shader_file.close();
+
+		vertex_code = vs_shader_stream.str();
+		fragment_code = fs_shader_stream.str();
+	}
+	catch (std::ifstream::failure &e)
+	{
+		std::cerr << "ERROR::SHADER::FILE::FILE_NOT_SUCCESSFULLY_READ" << e.what() << std::endl;
+	}
+	const char* vs_shader_code = vertex_code.c_str();
+	const char* fs_shader_code = fragment_code.c_str();
 
 	// compile shaders
-	glShaderSource(vertex_shader, 1, &vertexShaderSource, NULL);
-	glShaderSource(fragment_shader, 1, &fragmentShaderSource, NULL);
+	// ---------------
+	GLuint vertex, fragment;
 
-	glCompileShader(vertex_shader);
-	catch_shader_compile_errors(vertex_shader);
-
-	glCompileShader(fragment_shader);
-	catch_shader_compile_errors(fragment_shader);
-
-	glAttachShader(program, vertex_shader);
-	glAttachShader(program, fragment_shader);
-	glLinkProgram(program);
-	catch_program_compile_errors(program);
+	// vertex
+	vertex = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertex, 1, &vs_shader_code, NULL);
+	glCompileShader(vertex);
+	check_compile_errors(vertex, "VERTEX");
+	// fragment
+	fragment = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragment, 1, &fs_shader_code, NULL);
+	glCompileShader(fragment);
+	check_compile_errors(fragment, "FRAGMENT");
+	// program
+	ID = glCreateProgram();
+	glAttachShader(ID, vertex);
+	glAttachShader(ID, fragment);
+	glLinkProgram(ID);
+	check_compile_errors(ID, "PROGRAM");
+	// delete
+	glDeleteShader(vertex);
+	glDeleteShader(fragment);
 }
 
-const char* lowpoly::shader::read_file(const char* p_shader_file_path)
+void shader::use()
 {
-	// open file
-	// ---------
-	std::fstream file{};
-	file.open(p_shader_file_path, std::fstream::in);
+	glUseProgram(ID);
+}
 
-	// check error
-	// -----------
-	if (!file.is_open())
+
+void shader::check_compile_errors(unsigned int shader, std::string type)
+{
+	int success;
+	char infoLog[1024];
+	if (type != "PROGRAM")
 	{
-		std::cerr << "ERROR file not found or can't open file\n";
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+		if (!success)
+		{
+			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+			std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+		}
 	}
-
-	// read file
-	// ---------
-	std::stringstream file_stream;
-	file_stream << file.rdbuf();
-
-	// convert to str
-	// ----------------
-	std::string file_str = file_stream.str();
-
-	file.close();
-
-	// convert to c_str
-	// ---------------- 
-	const char* file_code = file_str.c_str();
-	return file_code;
-}
-
-void lowpoly::shader::catch_shader_compile_errors(GLuint shader)
-{
-	int shader_compiled;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &shader_compiled);
-	if (shader_compiled != GL_TRUE)
+	else
 	{
-		GLsizei log_length = 0;
-		GLchar message[1024];
-		glGetShaderInfoLog(shader, 1024, &log_length, message);
-		std::cerr << message << '\n';
-	}
-}
-
-void lowpoly::shader::catch_program_compile_errors(GLuint program)
-{
-	GLint program_linked;
-	glGetProgramiv(program, GL_LINK_STATUS, &program_linked);
-	if (program_linked != GL_TRUE)
-	{
-		GLsizei log_length = 0;
-		GLchar message[1024];
-		glGetProgramInfoLog(program, 1024, &log_length, message);
-		std::cerr << message << '\n';
+		glGetProgramiv(shader, GL_LINK_STATUS, &success);
+		if (!success)
+		{
+			glGetProgramInfoLog(shader, 1024, NULL, infoLog);
+			std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+		}
 	}
 }
 

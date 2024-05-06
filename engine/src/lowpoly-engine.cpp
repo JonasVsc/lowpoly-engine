@@ -4,10 +4,11 @@
 lowpoly_engine::lowpoly_engine()
 	: m_GUI{ false }
 {
-	glfwInit();
-
-    // Window Hints
-	// glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+	if (!glfwInit())
+		std::cerr << "Error::glfw::init";
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	
 	lowpoly_window = glfwCreateWindow(800, 600, "Lowpoly Engine", NULL, NULL);
@@ -15,8 +16,10 @@ lowpoly_engine::lowpoly_engine()
 
 	glfwSetFramebufferSizeCallback(lowpoly_window, framebuffer_size_callback);
 
-	glewInit();
+	if (glewInit() != GLEW_OK)
+		std::cerr << "Error::glew::init";
 
+	printf("%s\n", glGetString(GL_VERSION));
 }
 
 
@@ -36,8 +39,7 @@ void lowpoly_engine::render()
 {
 
 	
-	glfwSwapBuffers(lowpoly_window);
-	glfwPollEvents();
+	
 }
 
 

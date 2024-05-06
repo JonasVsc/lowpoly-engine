@@ -12,7 +12,7 @@ class triangle
 {
 public:
 	triangle();
-	void draw();
+	void draw(GLuint shaderProgram);
 
 public:
 	GLuint vertex_array_object;
