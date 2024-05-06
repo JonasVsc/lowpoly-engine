@@ -1,9 +1,6 @@
 ﻿#include"lowpoly-engine.h"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
+
 
 lowpoly_engine::lowpoly_engine()
 	: m_GUI{ false }
@@ -19,7 +16,6 @@ lowpoly_engine::lowpoly_engine()
 
 	glfwSetFramebufferSizeCallback(lowpoly_window, framebuffer_size_callback);
 
-
 	glewInit();
 
 	IMGUI_CHECKVERSION();
@@ -33,13 +29,10 @@ lowpoly_engine::lowpoly_engine()
 	ImGui_ImplGlfw_InitForOpenGL(lowpoly_window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
 	ImGui_ImplOpenGL3_Init();
 
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.5f, 1.0f);
 }
 
-void lowpoly_engine::processInput()
-{
-	glfwPollEvents();
-}
+
 
 
 void lowpoly_engine::clear()
@@ -55,13 +48,6 @@ void lowpoly_engine::draw()
 void lowpoly_engine::render()
 {
 
-		
-
-		
-
-		
-
-
 	// enable GUI render
 	if (m_GUI)
 	{
@@ -69,10 +55,31 @@ void lowpoly_engine::render()
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
 	glfwSwapBuffers(lowpoly_window);
+	glfwPollEvents();
 }
 
 
 void lowpoly_engine::setGUI(bool v)
 {
 	m_GUI = v;
+}
+
+GLFWwindow* lowpoly_engine::getWindow()
+{
+	return lowpoly_window;
+}
+
+
+
+// GLFW FUNCTIONS
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, GL_TRUE);
 }

@@ -8,6 +8,7 @@ project ("sandbox")
 # Packages
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glew CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
 
@@ -21,6 +22,7 @@ endif()
 # TODO: Add tests and install targets if needed.
 target_link_libraries(sandbox-lowpoly PRIVATE glfw)
 target_link_libraries(sandbox-lowpoly PRIVATE GLEW::glew)
+target_link_libraries(sandbox-lowpoly PRIVATE glm::glm)
 target_link_libraries(sandbox-lowpoly PRIVATE imgui::imgui)
 target_link_libraries(sandbox-lowpoly PRIVATE lowpoly-engine)
 

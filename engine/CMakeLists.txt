@@ -8,6 +8,7 @@ project("engine")
 # Packages
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glew CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
 
@@ -25,4 +26,5 @@ endif()
 
 target_link_libraries(lowpoly-engine PRIVATE glfw)
 target_link_libraries(lowpoly-engine PRIVATE GLEW::glew)
+target_link_libraries(lowpoly-engine PRIVATE glm::glm)
 target_link_libraries(lowpoly-engine PRIVATE imgui::imgui)

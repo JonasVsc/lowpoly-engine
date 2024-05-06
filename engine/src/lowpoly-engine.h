@@ -21,12 +21,12 @@ public:
 	void clear();
 	void draw();
 	void render();
-	void processInput();
 
 
 public:
 	
 	void setGUI(bool v);
+	GLFWwindow* getWindow();
 
 private:
 
@@ -42,7 +42,7 @@ private:
 
 // Utilities
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 
 // TODO: Reference additional headers your program requires here.
