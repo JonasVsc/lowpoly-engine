@@ -1,5 +1,10 @@
 ﻿#include"lowpoly-engine.h"
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
+
 lowpoly_engine::lowpoly_engine()
 {
 	glfwInit();
@@ -10,6 +15,9 @@ lowpoly_engine::lowpoly_engine()
 	
 	lowpoly_window = glfwCreateWindow(1280, 720, "Lowpoly Engine", NULL, NULL);
 	glfwMakeContextCurrent(lowpoly_window);
+
+	glfwSetFramebufferSizeCallback(lowpoly_window, framebuffer_size_callback);
+
 
 	glewInit();
 
@@ -36,8 +44,13 @@ void lowpoly_engine::start()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		ImGui::ShowDemoWindow(); // Show demo window! :)
+		float windowHeight = 200.0f; // Altura desejada da janela
 
+		ImGui::SetNextWindowPos(ImVec2(0, ImGui::GetIO().DisplaySize.y - windowHeight), ImGuiCond_Always);
+		ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x, windowHeight));
+		ImGui::Begin("Minha Janela ImGui", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+		ImGui::Text("Example");
+		ImGui::End();
 		glfwPollEvents();
 
 		ImGui::Render();
@@ -45,4 +58,5 @@ void lowpoly_engine::start()
 		glfwSwapBuffers(lowpoly_window);
 	}
 }
+
 
