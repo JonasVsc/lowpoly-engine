@@ -6,6 +6,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 lowpoly_engine::lowpoly_engine()
+	: m_GUI{ false }
 {
 	glfwInit();
 
