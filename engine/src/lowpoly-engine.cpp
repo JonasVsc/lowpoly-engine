@@ -1,6 +1,8 @@
 ﻿#include"lowpoly-engine.h"
 
 
+
+
 lowpoly_engine::lowpoly_engine(int width, int height, const char* window_label)
 	: m_GUI{ false }
 {
@@ -9,12 +11,12 @@ lowpoly_engine::lowpoly_engine(int width, int height, const char* window_label)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+	glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE);
 	
 	lowpoly_window = glfwCreateWindow(width, height, window_label, NULL, NULL);
 	glfwMakeContextCurrent(lowpoly_window);
 
-	glfwSetFramebufferSizeCallback(lowpoly_window, framebuffer_size_callback);
+	
 
 	if (glewInit() != GLEW_OK)
 		std::cerr << "Error::glew::init";
@@ -53,15 +55,3 @@ GLFWwindow* lowpoly_engine::getWindow()
 
 
 
-// GLFW FUNCTIONS
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-}
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
-}

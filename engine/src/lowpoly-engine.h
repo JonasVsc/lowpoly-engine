@@ -19,6 +19,12 @@
 #include"triangle.h"
 #include"cube.h"
 
+// APPLICATION GLOBAL SETTINGS
+// ---------------------------
+
+
+
+
 class lowpoly_engine
 {
 public:
@@ -47,8 +53,9 @@ private:
 };
 
 // Utilities
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+// void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+// void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+// void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
 
 // TODO: Reference additional headers your program requires here.
