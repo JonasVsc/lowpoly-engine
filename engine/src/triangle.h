@@ -18,8 +18,6 @@ public:
 	GLuint vertex_array_object;
 
 private:
-	GLuint buf;
-	float vertices[9];
 };
 
 

@@ -45,8 +45,7 @@ int main()
 		// projection
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-
-		// MVP locations
+		// locations
 		glUniformMatrix4fv(glGetUniformLocation(s2.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
 		glUniformMatrix4fv(glGetUniformLocation(s2.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(glGetUniformLocation(s2.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
