@@ -19,10 +19,8 @@ lowpoly_engine::lowpoly_engine()
 	if (glewInit() != GLEW_OK)
 		std::cerr << "Error::glew::init";
 
-	printf("%s\n", glGetString(GL_VERSION));
+	printf("gl version: %s\n", glGetString(GL_VERSION));
 }
-
-
 
 
 void lowpoly_engine::clear()

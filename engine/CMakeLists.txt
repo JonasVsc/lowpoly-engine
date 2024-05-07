@@ -20,7 +20,7 @@ add_library(lowpoly-engine STATIC
 	"src/triangle.h" 
 	"src/shader.cpp"
 	"src/shader.h"
-)
+ "src/gui.h" "src/gui.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET lowpoly-engine PROPERTY CXX_STANDARD 20)

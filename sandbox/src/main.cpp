@@ -8,6 +8,10 @@ int main()
 {
 	lowpoly_engine app;
 
+	// Initialize GUI
+	// --------------
+	lowpoly::setupUI(app.getWindow());
+
 	// Shaders
 	// -------
 	shader s1("shaders/vertexShader.vs", "shaders/fragmentShader.fs");
@@ -16,6 +20,7 @@ int main()
 	// Objects
 	// -------
 	lowpoly::triangle t1;
+	lowpoly::triangle t2;
 
 
 	// render loop
@@ -26,6 +31,8 @@ int main()
 		// -----
 		processInput(app.getWindow());
 
+		
+
 		// render
 		// ------
 		glClearColor(0.5f, 0.7f, 1.0f, 1.0f);
@@ -34,6 +41,11 @@ int main()
 		// draw triangle
 		// -------------
 		t1.draw(s1.ID);
+		t2.draw(s1.ID);
+
+		// render UI
+		// ---------
+		lowpoly::renderUI();
 
 		// glfw
 		// ----
