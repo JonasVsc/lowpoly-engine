@@ -22,7 +22,7 @@ int main()
 
 	// Objects
 	// -------
-	lowpoly::triangle t1;
+	lowpoly::cube c1;
 
 
 	// render loop
@@ -38,7 +38,7 @@ int main()
 
 		// model
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 0.4f, 1.0f));
 		// view
 		glm::mat4 view = glm::mat4(1.0f);
 		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
@@ -57,7 +57,7 @@ int main()
 		
 		// draw triangle
 		// -------------
-		t1.draw(s2.ID);
+		c1.draw(s2.ID);
 
 		// render UI
 		// ---------

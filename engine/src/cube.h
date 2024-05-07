@@ -18,8 +18,6 @@ namespace lowpoly
 		GLuint vertex_array_object;
 
 	private:
-		GLuint buf;
-		float vertices[36];
 	};
 
 

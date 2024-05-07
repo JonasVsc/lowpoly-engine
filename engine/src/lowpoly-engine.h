@@ -17,6 +17,7 @@
 #include"shader.h"
 #include"camera.h"
 #include"triangle.h"
+#include"cube.h"
 
 class lowpoly_engine
 {
