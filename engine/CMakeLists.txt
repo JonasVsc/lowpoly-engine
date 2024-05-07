@@ -25,6 +25,9 @@ add_library(lowpoly-engine STATIC
 	"src/camera.h"
 	"src/cube.h"
 	"src/cube.cpp"
+	"src/stb_image.h"
+	"src/texture.h"
+	"src/texture.cpp"
 )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

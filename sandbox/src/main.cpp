@@ -47,6 +47,10 @@ int main()
 	// -------
 	lowpoly::cube c1;
 
+	// Texture
+	// -------
+	lowpoly::texture t1(s2.ID, "textures/wall.jpg");
+
 
 	// render loop
 	// -----------
@@ -79,12 +83,14 @@ int main()
 
 		// render
 		// ------
-		glClearColor(0.5f, 0.7f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(0.5f, 0.7f, 1.0f, 1.0f);
 		
 		// draw triangle
 		// -------------
+		glBindTexture(GL_TEXTURE_2D, t1.texture_);
 		c1.draw(s2.ID);
+		glUniform1i(glGetUniformLocation(s2.ID, "texture"), 0); // set it manually
 		
 
 		// render UI
@@ -105,7 +111,6 @@ void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(FORWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)

@@ -16,7 +16,7 @@ lowpoly_engine::lowpoly_engine(int width, int height, const char* window_label)
 	lowpoly_window = glfwCreateWindow(width, height, window_label, NULL, NULL);
 	glfwMakeContextCurrent(lowpoly_window);
 
-	
+	glEnable(GL_DEPTH_TEST);
 
 	if (glewInit() != GLEW_OK)
 		std::cerr << "Error::glew::init";
