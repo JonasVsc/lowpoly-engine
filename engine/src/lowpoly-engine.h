@@ -19,11 +19,6 @@
 #include"triangle.h"
 #include"cube.h"
 
-// APPLICATION GLOBAL SETTINGS
-// ---------------------------
-
-
-
 
 class lowpoly_engine
 {
