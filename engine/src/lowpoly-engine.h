@@ -20,7 +20,7 @@
 #include"shader.h"
 #include"camera.h"
 #include"triangle.h"
-#include"cube.h"
+#include"object.h"
 #include"texture.h"
 
 
@@ -29,13 +29,7 @@ class lowpoly_engine
 public:
 	lowpoly_engine(int width, int height, const char* window_label);
 
-	void clear();
-	void draw();
-	void render();
-
-
 public:
-	
 	void setGUI(bool v);
 	GLFWwindow* getWindow();
 

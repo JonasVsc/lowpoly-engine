@@ -5,6 +5,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
+void MVP(shader &s);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -17,11 +18,8 @@ float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
 // timing
-float deltaTime = 0.0f;	// time between current frame and last frame
+float deltaTime = 0.0f;
 float lastFrame = 0.0f;
-
-
-
 
 int main()
 {
@@ -39,17 +37,19 @@ int main()
 
 	// Shaders
 	// -------
-	shader s1("shaders/vertexShader.vs", "shaders/fragmentShader.fs");
-	shader s2("shaders/camera_vs.glsl", "shaders/camera_fs.glsl");
+	shader my_shader("shaders/camera_vs.glsl", "shaders/camera_fs.glsl");
 
 
 	// Objects
 	// -------
-	lowpoly::cube c1;
+	lowpoly::object cube(my_shader);
+	lowpoly::object lightSource(my_shader);
+	// lightSource.setPosition(1.0f, 10.0f, 5.0f);
+
+
 
 	// Texture
 	// -------
-	lowpoly::texture t1(s2.ID, "textures/wall.jpg");
 
 
 	// render loop
@@ -68,30 +68,32 @@ int main()
 
 		// MVP
 		// ---
-
+		
 		// model
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 0.4f, 1.0f));
 		// view
 		glm::mat4 view = camera.GetViewMatrix();
 		// projection
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
 		// locations
-		glUniformMatrix4fv(glGetUniformLocation(s2.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(glGetUniformLocation(s2.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(s2.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
+		glUniformMatrix4fv(glGetUniformLocation(my_shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(glGetUniformLocation(my_shader.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(my_shader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		
 		// render
 		// ------
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.5f, 0.7f, 1.0f, 1.0f);
 		
-		// draw triangle
-		// -------------
-		glBindTexture(GL_TEXTURE_2D, t1.texture_);
-		c1.draw(s2.ID);
-		glUniform1i(glGetUniformLocation(s2.ID, "texture"), 0); // set it manually
+		// draw
+		// ----
+		cube.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+		cube.setColor(glm::vec4(0.2f, 0.4f, 1.0f, 1.0f));
+		cube.draw();
 		
+		lightSource.setPosition(glm::vec3(-2.0f, 2.0f, -2.0f));
+		lightSource.setColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+		lightSource.draw();
 
 		// render UI
 		// ---------
@@ -107,6 +109,9 @@ int main()
 }
 
 
+
+// Input handling
+// --------------
 void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)

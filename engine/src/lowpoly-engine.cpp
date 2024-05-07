@@ -1,8 +1,5 @@
 ﻿#include"lowpoly-engine.h"
 
-
-
-
 lowpoly_engine::lowpoly_engine(int width, int height, const char* window_label)
 	: m_GUI{ false }
 {
@@ -23,25 +20,6 @@ lowpoly_engine::lowpoly_engine(int width, int height, const char* window_label)
 
 	printf("gl version: %s\n", glGetString(GL_VERSION));
 }
-
-
-void lowpoly_engine::clear()
-{
-	glClear(GL_COLOR_BUFFER_BIT);
-}
-
-void lowpoly_engine::draw()
-{
-}
-
-
-void lowpoly_engine::render()
-{
-
-	
-	
-}
-
 
 void lowpoly_engine::setGUI(bool v)
 {

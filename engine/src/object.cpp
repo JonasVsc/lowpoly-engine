@@ -1,8 +1,8 @@
-#include"cube.h"
+#include"object.h"
 
-lowpoly::cube::cube()
+lowpoly::object::object(shader &s)
+    :   object_shader{s}
 {
-
 	glGenVertexArrays(1, &vertex_array_object);
 	glBindVertexArray(vertex_array_object);
 
@@ -64,9 +64,27 @@ lowpoly::cube::cube()
 
 	glBindVertexArray(0);
 }
-void lowpoly::cube::draw(GLuint shaderProgram)
+void lowpoly::object::draw()
 {
-	glUseProgram(shaderProgram);
+
+
+	glUseProgram(object_shader.ID);
 	glBindVertexArray(vertex_array_object);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
+
+
+void lowpoly::object::setPosition(glm::vec3 pos)
+{
+    // model
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(pos.x, pos.y, pos.z));
+    glUniformMatrix4fv(glGetUniformLocation(object_shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
+}
+
+void lowpoly::object::setColor(glm::vec4 color)
+{
+    glUniform4fv(glGetUniformLocation(object_shader.ID, "color"), 1, glm::value_ptr(color));
+}
+
+
