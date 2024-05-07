@@ -1,7 +1,7 @@
 ﻿#include"lowpoly-engine.h"
 
 
-lowpoly_engine::lowpoly_engine()
+lowpoly_engine::lowpoly_engine(int width, int height, const char* window_label)
 	: m_GUI{ false }
 {
 	if (!glfwInit())
@@ -11,7 +11,7 @@ lowpoly_engine::lowpoly_engine()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	
-	lowpoly_window = glfwCreateWindow(800, 600, "Lowpoly Engine", NULL, NULL);
+	lowpoly_window = glfwCreateWindow(width, height, window_label, NULL, NULL);
 	glfwMakeContextCurrent(lowpoly_window);
 
 	glfwSetFramebufferSizeCallback(lowpoly_window, framebuffer_size_callback);

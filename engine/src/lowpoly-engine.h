@@ -6,18 +6,22 @@
 #include<GL\glew.h>
 #include<GLFW\glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <iostream>
 #include <cstdio>
 
 #include"gui.h"
 #include"shader.h"
+#include"camera.h"
 #include"triangle.h"
-
 
 class lowpoly_engine
 {
 public:
-	lowpoly_engine();
+	lowpoly_engine(int width, int height, const char* window_label);
 
 	void clear();
 	void draw();

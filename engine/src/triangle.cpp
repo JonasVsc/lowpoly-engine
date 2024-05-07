@@ -9,16 +9,16 @@ lowpoly::triangle::triangle()
 	glGenBuffers(1, &buf);
 	glBindBuffer(GL_ARRAY_BUFFER, buf);
 
-	vertices[0] = -1.0f;
-	vertices[1] = -1.0f;
+	vertices[0] = -0.5f;
+	vertices[1] = -0.5f;
 	vertices[2] = -1.0f;
 
 	vertices[3] =  0.0f;
-	vertices[4] =  1.0f;
+	vertices[4] =  0.5f;
 	vertices[5] = -1.0f;
 
-	vertices[6] =  1.0f;
-	vertices[7] = -1.0f;
+	vertices[6] =  0.5f;
+	vertices[7] = -0.5f;
 	vertices[8] = -1.0f;
 
 	
