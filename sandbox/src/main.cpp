@@ -1,28 +1,15 @@
 #include"lowpoly-engine.h"
+#include"config.h"
 
 void processInput(GLFWwindow* window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
-// settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
-
-// camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
-bool firstMouse = true;
-
-// timing
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
-
 int main()
 {
 	
-	lowpoly_engine app(SCR_WIDTH, SCR_HEIGHT, "Lowpoly Engine");
+	lowpoly_engine app(lowpoly::SCR_WIDTH, lowpoly::SCR_HEIGHT, "Lowpoly Engine");
 
 	glfwSetFramebufferSizeCallback(app.getWindow(), framebuffer_size_callback);
 	glfwSetCursorPosCallback(app.getWindow(), mouse_callback);
@@ -49,8 +36,8 @@ int main()
 		// per-frame time logic
 		// --------------------
 		float currentFrame = static_cast<float>(glfwGetTime());
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
+		lowpoly::deltaTime = currentFrame - lowpoly::lastFrame;
+		lowpoly::lastFrame = currentFrame;
 
 		// input
 		// -----
@@ -62,9 +49,9 @@ int main()
 		// model
 		glm::mat4 model = glm::mat4(1.0f);
 		// view
-		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 view = lowpoly::camera.GetViewMatrix();
 		// projection
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(lowpoly::camera.Zoom), (float)lowpoly::SCR_WIDTH / lowpoly::SCR_HEIGHT, 0.1f, 100.0f);
 		// lightPos
 		glm::vec3 light_position = glm::vec3(1.0f, 2.0f, -5.0f);
 
@@ -87,7 +74,7 @@ int main()
 		cube.set(glm::vec3(0.5f, 0.5f, 1.0f), "objectColor");
 		cube.set(glm::vec3(1.0f, 1.0f, 1.0f), "lightColor");
 		cube.set(light_position, "lightPos");
-		cube.set(camera.Position, "viewPos");
+		cube.set(lowpoly::camera.Position, "viewPos");
 		cube.draw();
 
 		glUseProgram(shader_for_objects.ID);
@@ -117,13 +104,13 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera.ProcessKeyboard(FORWARD, deltaTime);
+		lowpoly::camera.ProcessKeyboard(FORWARD, lowpoly::deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera.ProcessKeyboard(BACKWARD, deltaTime);
+		lowpoly::camera.ProcessKeyboard(BACKWARD, lowpoly::deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera.ProcessKeyboard(LEFT, deltaTime);
+		lowpoly::camera.ProcessKeyboard(LEFT, lowpoly::deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera.ProcessKeyboard(RIGHT, deltaTime);
+		lowpoly::camera.ProcessKeyboard(RIGHT, lowpoly::deltaTime);
 }
 
 // GLFW FUNCTIONS
@@ -133,34 +120,29 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
-}
 
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
 	float xpos = static_cast<float>(xposIn);
 	float ypos = static_cast<float>(yposIn);
 
-	if (firstMouse)
+	if (lowpoly::firstMouse)
 	{
-		lastX = xpos;
-		lastY = ypos;
-		firstMouse = false;
+		lowpoly::lastX = xpos;
+		lowpoly::lastY = ypos;
+		lowpoly::firstMouse = false;
 	}
 
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+	float xoffset = xpos - lowpoly::lastX;
+	float yoffset = lowpoly::lastY - ypos; // reversed since y-coordinates go from bottom to top
 
-	lastX = xpos;
-	lastY = ypos;
+	lowpoly::lastX = xpos;
+	lowpoly::lastY = ypos;
 
-	camera.ProcessMouseMovement(xoffset, yoffset);
+	lowpoly::camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	camera.ProcessMouseScroll(static_cast<float>(yoffset));
+	lowpoly::camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }

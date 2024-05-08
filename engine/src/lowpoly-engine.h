@@ -16,13 +16,14 @@
 #include <iostream>
 #include <cstdio>
 
-#include"gui.h"
 #include"shader.h"
 #include"camera.h"
-#include"triangle.h"
-#include"object.h"
 #include"light.h"
 #include"texture.h"
+#include"gui.h"
+
+
+#include"object.h"
 #include"utils.h"
 
 

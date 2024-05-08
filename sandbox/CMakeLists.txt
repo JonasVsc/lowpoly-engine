@@ -16,6 +16,7 @@ find_package(imgui CONFIG REQUIRED)
 # Add source to this project's executable.
 add_executable(sandbox-lowpoly 
 	"src/main.cpp"
+	"src/config.h"
 )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
