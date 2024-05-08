@@ -28,7 +28,7 @@ add_library(lowpoly-engine STATIC
 	"src/stb_image.h"
 	"src/texture.h"
 	"src/texture.cpp"
-   "src/light.h" "src/light.cpp")
+   "src/light.h" "src/light.cpp" "src/utils.h" "src/utils.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET lowpoly-engine PROPERTY CXX_STANDARD 20)

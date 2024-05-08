@@ -5,8 +5,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
-void MVP(shader &s);
-
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -78,17 +76,13 @@ int main()
 		// draw
 		// ----
 		glUseProgram(shader_for_lights.ID);
-		glUniformMatrix4fv(glGetUniformLocation(shader_for_lights.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(glGetUniformLocation(shader_for_lights.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(shader_for_lights.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		lowpoly::model_view_projection(shader_for_lights, model, view, projection);
 		light.setPosition(light_position);
 		light.draw();
 
 
 		glUseProgram(shader_for_objects.ID);
-		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		lowpoly::model_view_projection(shader_for_objects, model, view, projection);
 		cube.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 		cube.set(glm::vec3(0.5f, 0.5f, 1.0f), "objectColor");
 		cube.set(glm::vec3(1.0f, 1.0f, 1.0f), "lightColor");
@@ -97,9 +91,7 @@ int main()
 		cube.draw();
 
 		glUseProgram(shader_for_objects.ID);
-		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		lowpoly::model_view_projection(shader_for_objects, model, view, projection);
 		another_cube.setPosition(glm::vec3(1.0f, -1.0f, 0.0f));
 		another_cube.set(glm::vec3(0.5f, 0.5f, 1.0f), "objectColor");
 		another_cube.set(glm::vec3(1.0f, 1.0f, 1.0f), "lightColor");
@@ -107,8 +99,6 @@ int main()
 		another_cube.draw();
 		
 		
-
-
 		// glfw
 		// ----
 		glfwSwapBuffers(app.getWindow());
