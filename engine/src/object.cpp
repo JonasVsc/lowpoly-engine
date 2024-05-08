@@ -11,6 +11,7 @@ lowpoly::object::object(shader &s)
 	glBindBuffer(GL_ARRAY_BUFFER, buf);
 
 	float vertices[] = {
+        // vertices          // textures
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
          0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
          0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -59,18 +60,15 @@ lowpoly::object::object(shader &s)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-	glBindVertexArray(0);
+    // texture
+    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    // glEnableVertexAttribArray(1);
 }
 void lowpoly::object::draw()
 {
-
-
-	glUseProgram(object_shader.ID);
 	glBindVertexArray(vertex_array_object);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
+
 }
 
 
@@ -82,9 +80,11 @@ void lowpoly::object::setPosition(glm::vec3 pos)
     glUniformMatrix4fv(glGetUniformLocation(object_shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
 }
 
-void lowpoly::object::setColor(glm::vec4 color)
+
+
+void lowpoly::object::setColor(glm::vec3 color, const char* location_name)
 {
-    glUniform4fv(glGetUniformLocation(object_shader.ID, "color"), 1, glm::value_ptr(color));
+    glUniform3fv(glGetUniformLocation(object_shader.ID, location_name), 1, glm::value_ptr(color));
 }
 
 
