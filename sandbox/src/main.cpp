@@ -5,6 +5,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
+void MVP(shader &s);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -17,11 +18,8 @@ float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
 // timing
-float deltaTime = 0.0f;	// time between current frame and last frame
+float deltaTime = 0.0f;
 float lastFrame = 0.0f;
-
-
-
 
 int main()
 {
@@ -35,21 +33,15 @@ int main()
 
 	// Initialize GUI
 	// --------------
-	lowpoly::setupUI(app.getWindow());
 
-	// Shaders
-	// -------
-	shader s1("shaders/vertexShader.vs", "shaders/fragmentShader.fs");
-	shader s2("shaders/camera_vs.glsl", "shaders/camera_fs.glsl");
+	// Initialize Shaders & Objects
+	// ----------------------------
+	shader shader_for_objects("shaders/camera_vs.glsl", "shaders/camera_fs.glsl");
+	shader shader_for_lights("shaders/light_vs.glsl", "shaders/light_fs.glsl");
 
-
-	// Objects
-	// -------
-	lowpoly::cube c1;
-
-	// Texture
-	// -------
-	lowpoly::texture t1(s2.ID, "textures/wall.jpg");
+	lowpoly::object cube(shader_for_objects);
+	lowpoly::object another_cube(shader_for_objects);
+	lowpoly::light light(shader_for_lights);
 
 
 	// render loop
@@ -66,36 +58,56 @@ int main()
 		// -----
 		processInput(app.getWindow());
 
-		// MVP
+		// MVP & Settings
 		// ---
-
+		
 		// model
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 0.4f, 1.0f));
 		// view
 		glm::mat4 view = camera.GetViewMatrix();
 		// projection
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
-		// locations
-		glUniformMatrix4fv(glGetUniformLocation(s2.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(glGetUniformLocation(s2.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(s2.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		// lightPos
+		glm::vec3 light_position = glm::vec3(1.0f, 2.0f, -5.0f);
 
 		// render
 		// ------
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0.5f, 0.7f, 1.0f, 1.0f);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+		// draw
+		// ----
+		glUseProgram(shader_for_lights.ID);
+		glUniformMatrix4fv(glGetUniformLocation(shader_for_lights.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(glGetUniformLocation(shader_for_lights.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(shader_for_lights.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		light.setPosition(light_position);
+		light.draw();
+
+
+		glUseProgram(shader_for_objects.ID);
+		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		cube.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+		cube.set(glm::vec3(0.5f, 0.5f, 1.0f), "objectColor");
+		cube.set(glm::vec3(1.0f, 1.0f, 1.0f), "lightColor");
+		cube.set(light_position, "lightPos");
+		cube.set(camera.Position, "viewPos");
+		cube.draw();
+
+		glUseProgram(shader_for_objects.ID);
+		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		another_cube.setPosition(glm::vec3(1.0f, -1.0f, 0.0f));
+		another_cube.set(glm::vec3(0.5f, 0.5f, 1.0f), "objectColor");
+		another_cube.set(glm::vec3(1.0f, 1.0f, 1.0f), "lightColor");
+		another_cube.set(light_position, "lightPos");
+		another_cube.draw();
 		
-		// draw triangle
-		// -------------
-		glBindTexture(GL_TEXTURE_2D, t1.texture_);
-		c1.draw(s2.ID);
-		glUniform1i(glGetUniformLocation(s2.ID, "texture"), 0); // set it manually
 		
 
-		// render UI
-		// ---------
-		lowpoly::renderUI();
 
 		// glfw
 		// ----
@@ -107,6 +119,9 @@ int main()
 }
 
 
+
+// Input handling
+// --------------
 void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)

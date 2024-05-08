@@ -23,12 +23,12 @@ add_library(lowpoly-engine STATIC
 	"src/gui.h"
 	"src/gui.cpp"
 	"src/camera.h"
-	"src/cube.h"
-	"src/cube.cpp"
+	"src/object.h"
+	"src/object.cpp"
 	"src/stb_image.h"
 	"src/texture.h"
 	"src/texture.cpp"
-)
+   "src/light.h" "src/light.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET lowpoly-engine PROPERTY CXX_STANDARD 20)
