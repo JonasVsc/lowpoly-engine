@@ -40,7 +40,8 @@ int main()
 	shader shader_for_lights("shaders/light_vs.glsl", "shaders/light_fs.glsl");
 
 	lowpoly::object cube(shader_for_objects);
-	lowpoly::object light(shader_for_lights);
+	lowpoly::object another_cube(shader_for_objects);
+	lowpoly::light light(shader_for_lights);
 
 
 	// render loop
@@ -57,7 +58,7 @@ int main()
 		// -----
 		processInput(app.getWindow());
 
-		// MVP
+		// MVP & Settings
 		// ---
 		
 		// model
@@ -66,9 +67,9 @@ int main()
 		glm::mat4 view = camera.GetViewMatrix();
 		// projection
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
-		// locations
+		// lightPos
+		glm::vec3 light_position = glm::vec3(1.0f, 2.0f, -5.0f);
 
-		
 		// render
 		// ------
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -80,7 +81,7 @@ int main()
 		glUniformMatrix4fv(glGetUniformLocation(shader_for_lights.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
 		glUniformMatrix4fv(glGetUniformLocation(shader_for_lights.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(glGetUniformLocation(shader_for_lights.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-		light.setPosition(glm::vec3(1.0f, 2.0f, -1.0f));
+		light.setPosition(light_position);
 		light.draw();
 
 
@@ -89,9 +90,21 @@ int main()
 		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 		cube.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-		cube.setColor(glm::vec3(0.2f, 0.4f, 0.6f), "objectColor");
-		cube.setColor(glm::vec3(1.0f, 1.0f, 1.0f), "lightColor");
+		cube.set(glm::vec3(0.5f, 0.5f, 1.0f), "objectColor");
+		cube.set(glm::vec3(1.0f, 1.0f, 1.0f), "lightColor");
+		cube.set(light_position, "lightPos");
+		cube.set(camera.Position, "viewPos");
 		cube.draw();
+
+		glUseProgram(shader_for_objects.ID);
+		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(shader_for_objects.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		another_cube.setPosition(glm::vec3(1.0f, -1.0f, 0.0f));
+		another_cube.set(glm::vec3(0.5f, 0.5f, 1.0f), "objectColor");
+		another_cube.set(glm::vec3(1.0f, 1.0f, 1.0f), "lightColor");
+		another_cube.set(light_position, "lightPos");
+		another_cube.draw();
 		
 		
 

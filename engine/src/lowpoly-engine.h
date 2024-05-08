@@ -21,6 +21,7 @@
 #include"camera.h"
 #include"triangle.h"
 #include"object.h"
+#include"light.h"
 #include"texture.h"
 
 
