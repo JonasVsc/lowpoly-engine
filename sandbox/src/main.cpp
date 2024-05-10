@@ -36,10 +36,11 @@ int main()
 
 	// texture
 	// -------
-	std::string texture_path = "textures/container2.png";
 	GLuint diffuseMap = loadTexture("textures/container2.png");
+	GLuint diffuse_specularMap = loadTexture("textures/container2_specular.png");
 	glUseProgram(shader_for_objects.ID);
 	cube.set("material.diffuse", 0);
+	cube.set("material.specular", 1);
 
 
 	// render loop
@@ -98,6 +99,8 @@ int main()
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuseMap);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, diffuse_specularMap);
 		cube.draw();
 
 
@@ -111,8 +114,8 @@ int main()
 		// draw
 		// ----
 		glUseProgram(shader_for_lights.ID);
+		model = glm::mat4(1.0f);
 		model = glm::translate(model, lowpoly::lightPos);
-		model = glm::scale(model, glm::vec3(0.2f));
 		lowpoly::model_view_projection(shader_for_lights, model, view, projection);
 		light.draw();
 		
