@@ -44,9 +44,13 @@ int main()
 		// -----
 		processInput(app.getWindow());
 
-		// MVP & Settings
-		// ---
+		// Settings
+		// --------
 		
+		
+
+		
+
 		// model
 		glm::mat4 model = glm::mat4(1.0f);
 		// view
@@ -61,31 +65,49 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
+		
+
+
+		glUseProgram(shader_for_objects.ID);
+		cube.set("light.position", lowpoly::lightPos);
+		cube.set("viewPos", lowpoly::camera.Position);
+
+		// light properties
+		glm::vec3 lightColor;
+		lightColor.x = static_cast<float>(sin(glfwGetTime() * 2.0f));
+		lightColor.y = static_cast<float>(sin(glfwGetTime() * 0.7f));
+		lightColor.z = static_cast<float>(sin(glfwGetTime() * 1.3f));
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+		cube.set("light.ambient", ambientColor);
+		cube.set("light.diffuse", diffuseColor); // darken diffuse light a bit
+		cube.set("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
+		// material properties
+		cube.set("material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
+		cube.set("material.diffuse", glm::vec3(1.0f, 0.5f, 0.31f));
+		cube.set("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+		cube.set("material.shininess", 32.0f);
+
+		// view/projection transformations
+		lowpoly::model_view_projection(shader_for_objects, model, view, projection);
+		cube.draw();
+
+
+		cube.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+		cube.set("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+		cube.set("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+		cube.set("lightPos", light_position);
+		cube.set("viewPos", lowpoly::camera.Position);
+
+		
 		// draw
 		// ----
 		glUseProgram(shader_for_lights.ID);
+		model = glm::translate(model, lowpoly::lightPos);
+		model = glm::scale(model, glm::vec3(0.2f));
 		lowpoly::model_view_projection(shader_for_lights, model, view, projection);
-		light.setPosition(light_position);
 		light.draw();
-
-
-		glUseProgram(shader_for_objects.ID);
-		lowpoly::model_view_projection(shader_for_objects, model, view, projection);
-		cube.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-		cube.set(glm::vec3(1.0f, 0.5f, 0.31f), "objectColor");
-		cube.set(glm::vec3(1.0f, 1.0f, 1.0f), "lightColor");
-		cube.set(light_position, "lightPos");
-		cube.set(lowpoly::camera.Position, "viewPos");
-		cube.draw();
-
-		glUseProgram(shader_for_objects.ID);
-		lowpoly::model_view_projection(shader_for_objects, model, view, projection);
-		another_cube.setPosition(glm::vec3(1.0f, -1.0f, 0.0f));
-		another_cube.set(glm::vec3(0.5f, 0.5f, 1.0f), "objectColor");
-		another_cube.set(glm::vec3(1.0f, 1.0f, 1.0f), "lightColor");
-		another_cube.set(light_position, "lightPos");
-		another_cube.draw();
-		
 		
 		// glfw
 		// ----

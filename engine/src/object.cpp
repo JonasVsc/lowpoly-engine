@@ -85,9 +85,14 @@ void lowpoly::object::setPosition(glm::vec3 pos)
 
 
 
-void lowpoly::object::set(glm::vec3 color, const char* location_name)
+void lowpoly::object::set(const char* location_name, glm::vec3 value)
 {
-    glUniform3fv(glGetUniformLocation(object_shader.ID, location_name), 1, glm::value_ptr(color));
+    glUniform3fv(glGetUniformLocation(object_shader.ID, location_name), 1, glm::value_ptr(value));
+}
+
+void lowpoly::object::set(const char* location_name, float value)
+{
+    glUniform1f(glGetUniformLocation(object_shader.ID, location_name), value);
 }
 
 

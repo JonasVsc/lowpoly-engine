@@ -6,8 +6,8 @@ namespace lowpoly
 {
 // Screen size
 // -----------
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1280;
+const unsigned int SCR_HEIGHT = 720;
 
 // Camera Settings
 // ---------------
@@ -20,4 +20,8 @@ bool firstMouse = true;
 // ------
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+// lighting
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 }
+

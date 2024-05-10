@@ -17,7 +17,8 @@ namespace lowpoly
 		object(shader& s);
 
 		void draw();
-		void set(glm::vec3 color, const char* location_name);
+		void set(const char* location_name, glm::vec3 value);
+		void set(const char* location_name, float value);
 		void setPosition(glm::vec3 pos);
 
 	private:
