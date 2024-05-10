@@ -25,8 +25,7 @@ add_library(lowpoly-engine STATIC
 	"src/object.h"
 	"src/object.cpp"
 	"src/stb_image.h"
-	"src/texture.h"
-	"src/texture.cpp"
+	
     "src/light.h"
     "src/light.cpp"
     "src/utils.h"

@@ -1,10 +1,14 @@
 #include"lowpoly-engine.h"
 #include"config.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 void processInput(GLFWwindow* window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+unsigned int loadTexture(char const* path);
 
 int main()
 {
@@ -28,6 +32,14 @@ int main()
 	lowpoly::object cube(shader_for_objects);
 	lowpoly::object another_cube(shader_for_objects);
 	lowpoly::light light(shader_for_lights);
+
+
+	// texture
+	// -------
+	std::string texture_path = "textures/container2.png";
+	GLuint diffuseMap = loadTexture("textures/container2.png");
+	glUseProgram(shader_for_objects.ID);
+	cube.set("material.diffuse", 0);
 
 
 	// render loop
@@ -73,24 +85,19 @@ int main()
 		cube.set("viewPos", lowpoly::camera.Position);
 
 		// light properties
-		glm::vec3 lightColor;
-		lightColor.x = static_cast<float>(sin(glfwGetTime() * 2.0f));
-		lightColor.y = static_cast<float>(sin(glfwGetTime() * 0.7f));
-		lightColor.z = static_cast<float>(sin(glfwGetTime() * 1.3f));
-		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
-		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
-		cube.set("light.ambient", ambientColor);
-		cube.set("light.diffuse", diffuseColor); // darken diffuse light a bit
+		cube.set("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+		cube.set("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
 		cube.set("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
 
 		// material properties
-		cube.set("material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
-		cube.set("material.diffuse", glm::vec3(1.0f, 0.5f, 0.31f));
 		cube.set("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
-		cube.set("material.shininess", 32.0f);
+		cube.set("material.shininess", 64.0f);
 
 		// view/projection transformations
 		lowpoly::model_view_projection(shader_for_objects, model, view, projection);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, diffuseMap);
 		cube.draw();
 
 
@@ -137,7 +144,6 @@ void processInput(GLFWwindow* window)
 }
 
 // GLFW FUNCTIONS
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -168,4 +174,41 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	lowpoly::camera.ProcessMouseScroll(static_cast<float>(yoffset));
+}
+
+unsigned int loadTexture(char const* path)
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+
+	int width, height, nrComponents;
+	unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
+	if (data)
+	{
+		GLenum format;
+		if (nrComponents == 1)
+			format = GL_RED;
+		else if (nrComponents == 3)
+			format = GL_RGB;
+		else if (nrComponents == 4)
+			format = GL_RGBA;
+
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		stbi_image_free(data);
+	}
+	else
+	{
+		std::cout << "Texture failed to load at path: " << path << std::endl;
+		stbi_image_free(data);
+	}
+
+	return textureID;
 }
