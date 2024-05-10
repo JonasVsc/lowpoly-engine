@@ -19,6 +19,7 @@ int main()
 	// Initialize GUI
 	// --------------
 
+
 	// Initialize Shaders & Objects
 	// ----------------------------
 	shader shader_for_objects("shaders/camera_vs.glsl", "shaders/camera_fs.glsl");
@@ -71,7 +72,7 @@ int main()
 		glUseProgram(shader_for_objects.ID);
 		lowpoly::model_view_projection(shader_for_objects, model, view, projection);
 		cube.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-		cube.set(glm::vec3(0.5f, 0.5f, 1.0f), "objectColor");
+		cube.set(glm::vec3(1.0f, 0.5f, 0.31f), "objectColor");
 		cube.set(glm::vec3(1.0f, 1.0f, 1.0f), "lightColor");
 		cube.set(light_position, "lightPos");
 		cube.set(lowpoly::camera.Position, "viewPos");

@@ -32,4 +32,5 @@ target_link_libraries(sandbox-lowpoly PRIVATE lowpoly-engine)
 
 target_include_directories(sandbox-lowpoly PUBLIC "../engine/src")
 
-
+# sends shaders folder to sandbox
+file(COPY ../engine/shaders DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../sandbox) 

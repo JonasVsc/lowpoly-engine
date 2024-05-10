@@ -39,6 +39,7 @@ endif()
 
 # TODO: Add tests and install targets if needed.
 
+
 target_link_libraries(lowpoly-engine PRIVATE glfw)
 target_link_libraries(lowpoly-engine PRIVATE GLEW::glew)
 target_link_libraries(lowpoly-engine PRIVATE glm::glm)
