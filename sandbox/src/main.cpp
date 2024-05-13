@@ -1,5 +1,6 @@
 #include"lowpoly-engine.h"
 #include"config.h"
+#include<array>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -20,27 +21,39 @@ int main()
 	glfwSetInputMode(app.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetScrollCallback(app.getWindow(), scroll_callback);
 
-	// Initialize GUI
-	// --------------
-
 
 	// Initialize Shaders & Objects
 	// ----------------------------
 	shader shader_for_objects("shaders/camera_vs.glsl", "shaders/camera_fs.glsl");
 	shader shader_for_lights("shaders/light_vs.glsl", "shaders/light_fs.glsl");
 
-	lowpoly::object cube(shader_for_objects);
-	lowpoly::object another_cube(shader_for_objects);
 	lowpoly::light light(shader_for_lights);
+	lowpoly::object cube(shader_for_objects);
 
+	glm::vec3 cubePositions[] = {
+	glm::vec3(0.0f,  0.0f,  0.0f),
+	glm::vec3(2.0f,  5.0f, -15.0f),
+	glm::vec3(-1.5f, -2.2f, -2.5f),
+	glm::vec3(-3.8f, -2.0f, -12.3f),
+	glm::vec3(2.4f, -0.4f, -3.5f),
+	glm::vec3(-1.7f,  3.0f, -7.5f),
+	glm::vec3(1.3f, -2.0f, -2.5f),
+	glm::vec3(1.5f,  2.0f, -2.5f),
+	glm::vec3(1.5f,  0.2f, -1.5f),
+	glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
 
 	// texture
 	// -------
 	GLuint diffuseMap = loadTexture("textures/container2.png");
 	GLuint diffuse_specularMap = loadTexture("textures/container2_specular.png");
+
+	// shader configuration
+	// --------------------
 	glUseProgram(shader_for_objects.ID);
 	cube.set("material.diffuse", 0);
 	cube.set("material.specular", 1);
+
 
 
 	// render loop
@@ -57,32 +70,16 @@ int main()
 		// -----
 		processInput(app.getWindow());
 
+		// clear
+		// -----
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		// Settings
 		// --------
-		
-		
-
-		
-
-		// model
-		glm::mat4 model = glm::mat4(1.0f);
-		// view
-		glm::mat4 view = lowpoly::camera.GetViewMatrix();
-		// projection
-		glm::mat4 projection = glm::perspective(glm::radians(lowpoly::camera.Zoom), (float)lowpoly::SCR_WIDTH / lowpoly::SCR_HEIGHT, 0.1f, 100.0f);
-		// lightPos
-		glm::vec3 light_position = glm::vec3(1.0f, 2.0f, -5.0f);
-
-		// render
-		// ------
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-
-		
-
-
 		glUseProgram(shader_for_objects.ID);
-		cube.set("light.position", lowpoly::lightPos);
+
+		cube.set("light.direction", glm::vec3(-0.2f, -1.0f, 0.3f));
 		cube.set("viewPos", lowpoly::camera.Position);
 
 		// light properties
@@ -91,33 +88,49 @@ int main()
 		cube.set("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
 
 		// material properties
-		cube.set("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
-		cube.set("material.shininess", 64.0f);
+		cube.set("material.shininess", 32.0f);
 
+
+		// model
+		glm::mat4 model(1.0f);
+		// view
+		glm::mat4 view = lowpoly::camera.GetViewMatrix();
+		// projection
+		glm::mat4 projection = glm::perspective(glm::radians(lowpoly::camera.Zoom), (float)lowpoly::SCR_WIDTH / lowpoly::SCR_HEIGHT, 0.1f, 100.0f);
 		// view/projection transformations
 		lowpoly::model_view_projection(shader_for_objects, model, view, projection);
 
+		// bind diffuse map
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuseMap);
+		// bind specular map
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, diffuse_specularMap);
-		cube.draw();
 
+		// render
+		// ------
+		glBindVertexArray(cube.vertex_array_object);
+		for (size_t i{}; i < 10; ++i)
+		{
+			// reset position
+			glm::mat4 model(1.0f);
+			model = glm::translate(model, cubePositions[i]);
+			float angle = 20.0f * i;
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
-		cube.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-		cube.set("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
-		cube.set("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-		cube.set("lightPos", light_position);
-		cube.set("viewPos", lowpoly::camera.Position);
+			cube.set("model", model);
+			cube.draw();
+		}
+
 
 		
 		// draw
 		// ----
-		glUseProgram(shader_for_lights.ID);
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, lowpoly::lightPos);
-		lowpoly::model_view_projection(shader_for_lights, model, view, projection);
-		light.draw();
+		// glUseProgram(shader_for_lights.ID);
+		// model = glm::mat4(1.0f);
+		// model = glm::translate(model, lowpoly::lightPos);
+		// lowpoly::model_view_projection(shader_for_lights, model, view, projection);
+		// light.draw();
 		
 		// glfw
 		// ----
@@ -144,6 +157,10 @@ void processInput(GLFWwindow* window)
 		lowpoly::camera.ProcessKeyboard(LEFT, lowpoly::deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		lowpoly::camera.ProcessKeyboard(RIGHT, lowpoly::deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+		lowpoly::camera.ProcessKeyboard(UP, lowpoly::deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		lowpoly::camera.ProcessKeyboard(DOWN, lowpoly::deltaTime);
 }
 
 // GLFW FUNCTIONS

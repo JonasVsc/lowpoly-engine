@@ -1,5 +1,10 @@
 #include"shader.h"
 
+shader::shader()
+{
+
+}
+
 shader::shader(const char* p_vertex_file_path, const char* p_fragment_file_path)
 {
 	std::string vertex_code;

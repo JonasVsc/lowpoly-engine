@@ -1,5 +1,10 @@
 #include"object.h"
 
+lowpoly::object::object()
+{
+}
+
+
 lowpoly::object::object(shader &s)
     :   object_shader{s}
 {
@@ -87,7 +92,10 @@ void lowpoly::object::setPosition(glm::vec3 pos)
     glUniformMatrix4fv(glGetUniformLocation(object_shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
 }
 
-
+void lowpoly::object::set(const char* location_name, glm::mat4 value)
+{
+    glUniformMatrix4fv(glGetUniformLocation(object_shader.ID, location_name), 1, GL_FALSE, glm::value_ptr(value));
+}
 
 void lowpoly::object::set(const char* location_name, glm::vec3 value)
 {

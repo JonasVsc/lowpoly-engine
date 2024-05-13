@@ -13,7 +13,8 @@
 class shader
 {
 public:
-	shader(const char *vertex_path, const char *fragment_path);
+	shader(const char* vertex_path, const char* fragment_path);
+	shader();
 	void use();
 	GLuint ID;
 private:
