@@ -79,13 +79,17 @@ int main()
 		// --------
 		glUseProgram(shader_for_objects.ID);
 
-		cube.set("light.direction", glm::vec3(-0.2f, -1.0f, 0.3f));
+		cube.set("light.position", lowpoly::lightPos);
 		cube.set("viewPos", lowpoly::camera.Position);
 
 		// light properties
 		cube.set("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
 		cube.set("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
 		cube.set("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
+		cube.set("light.constant", 1.0f);
+		cube.set("light.linear", 0.045f);
+		cube.set("light.quadratic", 0.0075f);
 
 		// material properties
 		cube.set("material.shininess", 32.0f);
@@ -126,11 +130,11 @@ int main()
 		
 		// draw
 		// ----
-		// glUseProgram(shader_for_lights.ID);
-		// model = glm::mat4(1.0f);
-		// model = glm::translate(model, lowpoly::lightPos);
-		// lowpoly::model_view_projection(shader_for_lights, model, view, projection);
-		// light.draw();
+		glUseProgram(shader_for_lights.ID);
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, lowpoly::lightPos);
+		lowpoly::model_view_projection(shader_for_lights, model, view, projection);
+		light.draw();
 		
 		// glfw
 		// ----
